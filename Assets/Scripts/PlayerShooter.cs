@@ -11,6 +11,7 @@ public class PlayerShooter : MonoBehaviour {
     private PlayerInput playerInput; // 플레이어의 입력
     private Animator playerAnimator; // 애니메이터 컴포넌트
 
+
     private void Start() {
         // 사용할 컴포넌트들을 가져오기
         playerInput = GetComponent<PlayerInput>();
@@ -29,6 +30,15 @@ public class PlayerShooter : MonoBehaviour {
 
     private void Update() {
         // 입력을 감지하고 총 발사하거나 재장전
+        if (playerInput.fire) {
+            gun.Fire();
+        }
+        else if (playerInput.reload) {
+            if (gun.Reload()) {
+                playerAnimator.SetTrigger("Reload");
+            }
+        }
+        UpdateUI(); // TODO: Update -> UnityEvent
     }
 
     // 탄약 UI 갱신
@@ -42,6 +52,19 @@ public class PlayerShooter : MonoBehaviour {
 
     // 애니메이터의 IK 갱신
     private void OnAnimatorIK(int layerIndex) {
-        
+        gunPivot.position = playerAnimator.GetIKHintPosition(AvatarIKHint.RightElbow);
+
+        playerAnimator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1.0f);
+        playerAnimator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1.0f);
+
+        playerAnimator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandMount.position);
+        playerAnimator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandMount.rotation);
+
+
+        playerAnimator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1.0f);
+        playerAnimator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1.0f);
+
+        playerAnimator.SetIKPosition(AvatarIKGoal.RightHand, rightHandMount.position);
+        playerAnimator.SetIKRotation(AvatarIKGoal.RightHand, rightHandMount.rotation);
     }
 }

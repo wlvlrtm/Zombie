@@ -73,7 +73,7 @@ public class Gun : MonoBehaviour {
         }
 
 
-        StartCoroutine("ShotEffect");
+        StartCoroutine("ShotEffect", hitPosition);
         magAmmo -= 1;
 
         if (magAmmo <= 0) {
